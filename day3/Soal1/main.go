@@ -19,6 +19,8 @@ func ArrayMerge(arrayA, arrayB []string) []string {
 		isSame = false
 	}
 	return arraySame
+
+	// solusi yg lebih benar ada di catatan
 }
 
 func main() {
