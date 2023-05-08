@@ -108,7 +108,7 @@ func DeleteUserController(c echo.Context) error {
 	// looking for data in index of slice users, then delete element in slice users and render JSON response
 	for i, v := range users {
 		if v.Id == id {
-			users = append(users[:i-1], users[i:]...)
+			users = append(users[:i], users[i+1:]...)
 			return c.JSON(http.StatusOK, map[string]interface{}{
 				"messages": "delete success",
 			})
