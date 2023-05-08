@@ -47,7 +47,7 @@ func CreateUserController(c echo.Context) error {
 // get all users
 func GetUsersController(c echo.Context) error {
 	// render JSON response with success message and users data
-	....
+	return c.JSON(http.StatusOK, users)
 }
 
 // get user by id
@@ -57,7 +57,7 @@ func GetUserController(c echo.Context) error {
 
 	// find data by id, then render data - JSON response
 	for _, v := range users {
-		if v.Id == .... {
+		if v.Id == id {
 			return c.JSON(http.StatusOK, map[string]interface{}{
 				"messages": "success user found",
 				"user":     v,
@@ -75,36 +75,40 @@ func GetUserController(c echo.Context) error {
 // update user by id
 func UpdateUserController(c echo.Context) error {
 	// catch path param from url
-	....
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	// binding data
-	....
+	user := User{}
+	c.Bind(&user)
 
 	// find data and change the value, then render JSON response
 	for _, v := range users {
 		if v.Id == id {
-			v.Name = input.Name
-			....
+			v.Name = user.Name
+			v.Email = user.Email
+			v.Address = user.Address
 			return c.JSON(http.StatusOK, map[string]interface{}{
 				"messages": "success updated user",
-				"user":     ....,
+				"user":     v,
 			})
 		}
 	}
 
 	// when the data does not exist render JSON response with not found message
-	....
+	return c.JSON(echo.ErrBadRequest.Code, map[string]interface{}{
+		"messages": "User Not Found",
+	})
 }
 
 // delete user by id
 func DeleteUserController(c echo.Context) error {
 	// catch path param from url
-	....
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	// looking for data in index of slice users, then delete element in slice users and render JSON response
-	for _, v := range users {
+	for i, v := range users {
 		if v.Id == id {
-			....
+			users = append(users[:i-1], users[i:]...)
 			return c.JSON(http.StatusOK, map[string]interface{}{
 				"messages": "delete success",
 			})
@@ -112,7 +116,9 @@ func DeleteUserController(c echo.Context) error {
 	}
 
 	// when the data does not exist render JSON response with not found message
-	....
+	return c.JSON(echo.ErrBadRequest.Code, map[string]interface{}{
+		"messages": "User Not Found",
+	})
 }
 
 // ---------------------------------------------------
